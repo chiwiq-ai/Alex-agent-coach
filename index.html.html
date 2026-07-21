@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex — Your Business Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0F1019;
+    --bg-alt: #171928;
+    --panel: #1B1D2E;
+    --brass: #E0A458;
+    --brass-soft: #F0C98A;
+    --violet: #8577F5;
+    --violet-soft: #B3ABFF;
+    --text: #F4F1EA;
+    --text-dim: #A6A9C4;
+    --text-faint: #6C6F8C;
+    --line: rgba(244,241,234,0.09);
+    --line-strong: rgba(244,241,234,0.16);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection{ background: var(--violet); color: var(--bg); }
+
+  a{ color: inherit; }
+
+  #bg-canvas{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  #bg-canvas canvas{ display: block; width: 100%; height: 100%; }
+
+  .eyebrow{
+    font-family: 'Space Grotesk', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--brass-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+  .eyebrow::before{
+    content:'';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--violet);
+    box-shadow: 0 0 0 0 rgba(133,119,245,0.6);
+    animation: dot-pulse 2.4s ease-out infinite;
+  }
+  @keyframes dot-pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(133,119,245,0.55); }
+    70%{ box-shadow: 0 0 0 8px rgba(133,119,245,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(133,119,245,0); }
+  }
+
+  h1,h2,h3{
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    line-height: 1.05;
+    margin: 0;
+  }
+  em{
+    font-style: italic;
+    font-weight: 500;
+    color: var(--brass-soft);
+  }
+
+  .wrap{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* NAV */
+  header{
+    position: fixed;
+    top:0; left:0; right:0;
+    z-index: 50;
+    background: linear-gradient(to bottom, rgba(15,16,25,0.92), rgba(15,16,25,0.6) 70%, transparent);
+    backdrop-filter: blur(6px);
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 22px 32px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .logo{
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    display:flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .logo span{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 500;
+  }
+  .nav-cta{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 10px 20px;
+    border-radius: 100px;
+    border: 1px solid var(--line-strong);
+    text-decoration: none;
+    transition: border-color .25s ease, background .25s ease;
+    white-space: nowrap;
+  }
+  .nav-cta:hover{
+    border-color: var(--brass);
+    background: rgba(224,164,88,0.08);
+  }
+
+  /* HERO */
+  .hero{
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 140px 0 100px;
+  }
+  .hero-grid{
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 40px;
+    align-items: center;
+    width: 100%;
+  }
+  .hero-copy{ position: relative; z-index: 3; }
+  .hero-copy .eyebrow{ margin-bottom: 22px; }
+  .hero h1{
+    font-size: clamp(2.6rem, 5vw, 4.1rem);
+    letter-spacing: -0.01em;
+  }
+  .hero p.lede{
+    margin-top: 24px;
+    font-size: 1.12rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    max-width: 46ch;
+  }
+  .hero-actions{
+    margin-top: 38px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .btn-primary{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    background: var(--brass);
+    color: #241A0A;
+    border: none;
+    padding: 15px 28px;
+    border-radius: 100px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+    box-shadow: 0 8px 24px -8px rgba(224,164,88,0.5);
+  }
+  .btn-primary:hover{
+    transform: translateY(-2px);
+    background: var(--brass-soft);
+    box-shadow: 0 12px 28px -8px rgba(224,164,88,0.65);
+  }
+  .btn-ghost{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    border: 1px solid var(--line-strong);
+    padding: 15px 26px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: border-color .25s ease, color .25s ease;
+  }
+  .btn-ghost:hover{ border-color: var(--violet-soft); color: var(--text); }
+
+  .hero-stats{
+    margin-top: 54px;
+    display: flex;
+    gap: 42px;
+    flex-wrap: wrap;
+  }
+  .stat b{
+    display:block;
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .stat span{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  /* ORB STAGE */
+  .orb-stage{
+    position: relative;
+    height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .orb-rings{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .ring{
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(133,119,245,0.28);
+  }
+  .ring.r1{ width: 220px; height: 220px; animation: ring-pulse 3.2s ease-out infinite; }
+  .ring.r2{ width: 220px; height: 220px; animation: ring-pulse 3.2s ease-out infinite; animation-delay: 1.05s; }
+  .ring.r3{ width: 220px; height: 220px; animation: ring-pulse 3.2s ease-out infinite; animation-delay: 2.1s; }
+  @keyframes ring-pulse{
+    0%{ transform: scale(0.7); opacity: 0; border-color: rgba(224,164,88,0.5); }
+    12%{ opacity: 0.9; }
+    100%{ transform: scale(2.15); opacity: 0; border-color: rgba(133,119,245,0.05); }
+  }
+
+  #orb-canvas{
+    width: 420px;
+    height: 420px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .orb-caption{
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    text-align: center;
+    z-index: 3;
+  }
+
+  /* WIDGET SLOT */
+  .widget-slot{
+    margin-top: 30px;
+    border: 1px dashed var(--line-strong);
+    border-radius: 20px;
+    padding: 22px 24px;
+    background: linear-gradient(180deg, rgba(133,119,245,0.05), rgba(224,164,88,0.03));
+    max-width: 46ch;
+  }
+  .widget-slot .label{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--violet-soft);
+    margin-bottom: 6px;
+    display:block;
+  }
+  .widget-slot p{
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--text-faint);
+    line-height: 1.55;
+  }
+  .widget-slot code{
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.78rem;
+    color: var(--brass-soft);
+  }
+
+  /* SECTIONS */
+  section{ position: relative; }
+  .section-pad{ padding: 120px 0; }
+  .section-head{ max-width: 640px; margin-bottom: 64px; }
+  .section-head .eyebrow{ margin-bottom: 18px; }
+  .section-head h2{
+    font-size: clamp(2rem, 3.4vw, 2.7rem);
+  }
+  .section-head p{
+    margin-top: 18px;
+    color: var(--text-dim);
+    font-size: 1.02rem;
+    line-height: 1.65;
+  }
+
+  .reveal{
+    opacity: 0;
+    transform: perspective(1000px) translateY(34px) rotateX(10deg);
+    transform-origin: 50% 100%;
+    transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in{ opacity: 1; transform: perspective(1000px) translateY(0) rotateX(0deg); }
+
+  /* Scroll-fill story text: words light up as you scroll past them */
+  .story .w{
+    display: inline-block;
+    opacity: 0.2;
+    color: var(--text);
+    transition: opacity .12s linear;
+  }
+  .story .w.on-brass{ color: var(--brass-soft); }
+  .story-ready .w{ will-change: opacity; }
+
+  /* TOPIC CARDS */
+  .topics{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    perspective: 1200px;
+  }
+  .topic-card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px;
+    transition: border-color .3s ease, transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease;
+    will-change: transform;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+  }
+  .topic-card.reveal:nth-child(2){ transition-delay: .08s; }
+  .topic-card.reveal:nth-child(3){ transition-delay: .16s; }
+  .topic-card.reveal:nth-child(4){ transition-delay: .24s; }
+
+  .topic-card:hover{ border-color: var(--line-strong); }
+  .topic-card.tilting{ transition: border-color .3s ease, box-shadow .2s ease; }
+  .topic-card .tag{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brass-soft);
+  }
+  .topic-card h3{
+    margin-top: 14px;
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+  .topic-card p{
+    margin-top: 12px;
+    color: var(--text-dim);
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+
+  /* PROCESS */
+  .process{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .step{
+    padding: 40px 28px;
+    border-right: 1px solid var(--line);
+    position: relative;
+  }
+  .step:last-child{ border-right: none; }
+  .step .num{
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--violet-soft);
+  }
+  .step h3{
+    margin-top: 14px;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  .step p{
+    margin-top: 10px;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  /* CLOSING CTA */
+  .closing{
+    text-align: center;
+    padding: 130px 0 150px;
+    position: relative;
+  }
+  .closing h2{
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+    max-width: 16ch;
+    margin: 0 auto;
+  }
+  .closing p{
+    margin: 22px auto 0;
+    color: var(--text-dim);
+    max-width: 46ch;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  .closing .btn-primary{ margin-top: 40px; }
+
+  footer{
+    border-top: 1px solid var(--line);
+    padding: 36px 0;
+  }
+  .footer-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.78rem;
+    color: var(--text-faint);
+  }
+
+  @media (max-width: 880px){
+    .hero-grid{ grid-template-columns: 1fr; }
+    .orb-stage{ height: 380px; order: -1; }
+    #orb-canvas{ width: 280px; height: 280px; }
+    .topics{ grid-template-columns: 1fr; }
+    .process{ grid-template-columns: 1fr; }
+    .step{ border-right: none; border-bottom: 1px solid var(--line); }
+    .step:last-child{ border-bottom: none; }
+    nav{ padding: 18px 20px; }
+    .wrap{ padding: 0 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="bg-canvas" aria-hidden="true"></div>
+
+<header>
+  <nav>
+    <div class="logo">Alex <span>Business Coach</span></div>
+    <a href="#talk" class="nav-cta">Talk to Alex</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">On call, day or night</span>
+      <h1>Alex, your <em>business</em> coach.</h1>
+      <p class="lede story">Tell him what's stuck — pricing, hiring, a slow quarter, a launch you're not sure about. Alex listens, asks the right follow-up, and hands you a plan you can act on before you hang up.</p>
+
+      <div class="hero-actions">
+        <a href="#talk" class="btn-primary">Start talking →</a>
+        <a href="#topics" class="btn-ghost">What he helps with</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat"><b>24/7</b><span>Always answers</span></div>
+        <div class="stat"><b>&lt; 10 sec</b><span>To first response</span></div>
+        <div class="stat"><b>1:1</b><span>No queue, no waitlist</span></div>
+      </div>
+    </div>
+
+    <div class="orb-stage" id="talk">
+      <div class="orb-rings">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+      </div>
+      <div id="orb-canvas"></div>
+      <div class="orb-caption">Alex is listening</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="widget-slot">
+      <span class="label">Voice widget</span>
+      <p>Alex is live — the ElevenLabs widget is connected. By default it floats as a button in the corner of the screen (that's how ElevenLabs ships it); let me know if you'd rather it sit inline right here under the orb instead.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" id="topics">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Bring him the real problem</span>
+      <h2>Four things founders call about most</h2>
+      <p class="story">Alex isn't a script. He works from what you tell him — these are just the conversations that come up again and again.</p>
+    </div>
+
+    <div class="topics">
+      <div class="topic-card reveal">
+        <span class="tag">Strategy</span>
+        <h3>The next right move</h3>
+        <p class="story">You've got three good options and no time to waste. Alex helps you stress-test each one against your actual numbers and walk away with a decision, not more options.</p>
+      </div>
+      <div class="topic-card reveal">
+        <span class="tag">Growth</span>
+        <h3>Getting unstuck</h3>
+        <p class="story">Revenue's flat and you can't tell if it's the offer, the price, or the pitch. Talk it through out loud — Alex is good at spotting which one it actually is.</p>
+      </div>
+      <div class="topic-card reveal">
+        <span class="tag">Leadership</span>
+        <h3>The conversation you're avoiding</h3>
+        <p class="story">A hire that isn't working out, a partner who's checked out, feedback you don't know how to give. Rehearse it with Alex before you have it for real.</p>
+      </div>
+      <div class="topic-card reveal">
+        <span class="tag">Cash flow</span>
+        <h3>Making the runway make sense</h3>
+        <p class="story">Walk Alex through what's coming in and going out. He'll help you see where the pressure actually is, three months out — not just this week.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">No forms, no onboarding</span>
+      <h2>How a session actually goes</h2>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="process">
+      <div class="step reveal">
+        <span class="num">First</span>
+        <h3>Open the call</h3>
+        <p class="story">Tap "Start talking." No sign-up, no intake form — Alex is already on the line.</p>
+      </div>
+      <div class="step reveal" style="transition-delay: .12s">
+        <span class="num">Then</span>
+        <h3>Say what's going on</h3>
+        <p class="story">Talk the way you would to a mentor — messy, half-formed, mid-thought. He'll ask what he needs to.</p>
+      </div>
+      <div class="step reveal" style="transition-delay: .24s">
+        <span class="num">After</span>
+        <h3>Leave with a plan</h3>
+        <p class="story">Alex closes every call by naming the one or two things worth doing next, in plain terms.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="wrap">
+    <h2 class="reveal">Whatever it is, say it out loud.</h2>
+    <p class="reveal story">Alex is already listening.</p>
+    <a href="#talk" class="btn-primary reveal">Talk to Alex →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>Alex — Business Coach</span>
+    <span>Voice-first. Always on.</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  // ---- Scroll reveal ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---- Story text: words fill in as you scroll past them ----
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const storyEls = Array.from(document.querySelectorAll('.story'));
+
+  function splitIntoWords(el){
+    const tokens = el.textContent.split(/(\s+)/);
+    el.textContent = '';
+    const words = [];
+    tokens.forEach(tok => {
+      if(tok.trim() === ''){
+        el.appendChild(document.createTextNode(tok));
+      } else {
+        const span = document.createElement('span');
+        span.className = 'w';
+        span.textContent = tok;
+        el.appendChild(span);
+        words.push(span);
+      }
+    });
+    el.classList.add('story-ready');
+    return words;
+  }
+
+  const storyData = storyEls.map(el => ({ el, words: splitIntoWords(el) }));
+
+  if(prefersReducedMotion){
+    storyData.forEach(({ words }) => words.forEach(w => { w.style.opacity = 1; }));
+  } else {
+    let ticking = false;
+
+    function updateStoryText(){
+      const vh = window.innerHeight;
+      const startLine = vh * 0.82;   // words begin lighting up here
+      const endLine = vh * 0.32;     // fully lit by here
+
+      storyData.forEach(({ el, words }) => {
+        const rect = el.getBoundingClientRect();
+        if(rect.bottom < -50 || rect.top > vh + 50) return; // skip far-offscreen work
+
+        const span = (rect.height || 1) + (startLine - endLine);
+        let progress = (startLine - rect.top) / span;
+        progress = Math.max(0, Math.min(1, progress));
+
+        const n = words.length;
+        words.forEach((w, i) => {
+          const wp = n <= 1 ? 0 : i / (n - 1);
+          const diff = progress - wp;
+          let opacity;
+          if(diff > 0.04) opacity = 1;
+          else if(diff < -0.04) opacity = 0.2;
+          else opacity = 0.2 + ((diff + 0.04) / 0.08) * 0.8;
+          w.style.opacity = opacity;
+        });
+      });
+      ticking = false;
+    }
+
+    function onScroll(){
+      if(!ticking){
+        requestAnimationFrame(updateStoryText);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    updateStoryText();
+  }
+
+
+  // ---- Card tilt (real 3D via per-element perspective) ----
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!prefersReduced){
+    document.querySelectorAll('.topic-card').forEach(card => {
+      card.addEventListener('mouseenter', () => card.classList.add('tilting'));
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        const rotY = x * 14;
+        const rotX = -y * 14;
+        card.style.transform = `perspective(700px) rotateY(${rotY}deg) rotateX(${rotX}deg) translateZ(18px)`;
+        card.style.boxShadow = `${-x * 26}px ${18 - y * 10}px 40px -18px rgba(0,0,0,0.55), ${x * 10}px ${-y * 10}px 24px -10px rgba(133,119,245,0.18)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.classList.remove('tilting');
+        card.style.transform = '';
+        card.style.boxShadow = '';
+      });
+    });
+  }
+
+  // ---- Ambient full-page 3D backdrop ----
+  (function(){
+    const holder = document.getElementById('bg-canvas');
+    if(!holder || typeof THREE === 'undefined') return;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let w = window.innerWidth, h = window.innerHeight;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, w/h, 0.1, 100);
+    camera.position.z = 9;
+
+    let renderer;
+    try{
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    }catch(e){ return; }
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
+    holder.appendChild(renderer.domElement);
+
+    const field = new THREE.Group();
+    scene.add(field);
+
+    // Drifting dust field, two tones
+    function makeDust(count, color, size, spread, depth){
+      const positions = new Float32Array(count * 3);
+      for(let i = 0; i < count; i++){
+        positions[i*3]   = (Math.random() - 0.5) * spread;
+        positions[i*3+1] = (Math.random() - 0.5) * spread * 0.6;
+        positions[i*3+2] = (Math.random() - 0.5) * depth - 6;
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const mat = new THREE.PointsMaterial({ color, size, transparent: true, opacity: 0.5 });
+      return new THREE.Points(geo, mat);
+    }
+    const dustBrass = makeDust(160, 0xE0A458, 0.045, 22, 26);
+    const dustViolet = makeDust(200, 0x8577F5, 0.035, 26, 30);
+    field.add(dustBrass, dustViolet);
+
+    // A few large, faint drifting wireframe forms for depth
+    const shapes = [];
+    const shapeGeoA = new THREE.IcosahedronGeometry(2.2, 0);
+    const shapeGeoB = new THREE.OctahedronGeometry(1.6, 0);
+    [
+      { geo: shapeGeoA, color: 0x8577F5, pos: [-5, 2, -10], speed: 0.05 },
+      { geo: shapeGeoB, color: 0xE0A458, pos: [5.5, -1.5, -14], speed: -0.04 },
+      { geo: shapeGeoA, color: 0xE0A458, pos: [-3, -3, -18], speed: 0.03 },
+    ].forEach(cfg => {
+      const mat = new THREE.MeshBasicMaterial({ color: cfg.color, wireframe: true, transparent: true, opacity: 0.1 });
+      const mesh = new THREE.Mesh(cfg.geo, mat);
+      mesh.position.set(...cfg.pos);
+      mesh.userData.speed = cfg.speed;
+      field.add(mesh);
+      shapes.push(mesh);
+    });
+
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth) - 0.5;
+      mouseY = (e.clientY / window.innerHeight) - 0.5;
+    });
+
+    function scrollFraction(){
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    }
+
+    const clock = new THREE.Clock();
+    function animate(){
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+      const sf = scrollFraction();
+
+      // Dolly slowly through the depth field as the page scrolls
+      camera.position.z = 9 - sf * 6;
+      camera.rotation.z = sf * 0.12;
+
+      field.rotation.y = t * 0.015 + mouseX * 0.15 + sf * 0.5;
+      field.rotation.x = mouseY * 0.1;
+
+      dustBrass.rotation.y += 0.0006;
+      dustViolet.rotation.y -= 0.0004;
+
+      shapes.forEach(s => { s.rotation.x += s.userData.speed * 0.01; s.rotation.y += s.userData.speed * 0.008; });
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      w = window.innerWidth; h = window.innerHeight;
+      camera.aspect = w/h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+  })();
+
+  // ---- 3D voice orb ----
+  (function(){
+    const holder = document.getElementById('orb-canvas');
+    if(!holder || typeof THREE === 'undefined') return;
+
+    let w = holder.clientWidth, h = holder.clientHeight;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, w/h, 0.1, 100);
+    camera.position.z = 5.4;
+
+    let renderer;
+    try{
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    }catch(e){ return; }
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    holder.appendChild(renderer.domElement);
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    // Core: layered icosahedron wireframes
+    const brass = new THREE.Color(0xE0A458);
+    const violet = new THREE.Color(0x8577F5);
+
+    const coreGeo = new THREE.IcosahedronGeometry(1.35, 1);
+    const coreMat = new THREE.MeshBasicMaterial({ color: violet, wireframe: true, transparent: true, opacity: 0.55 });
+    const core = new THREE.Mesh(coreGeo, coreMat);
+    group.add(core);
+
+    const coreGeo2 = new THREE.IcosahedronGeometry(1.0, 1);
+    const coreMat2 = new THREE.MeshBasicMaterial({ color: brass, wireframe: true, transparent: true, opacity: 0.4 });
+    const core2 = new THREE.Mesh(coreGeo2, coreMat2);
+    group.add(core2);
+
+    // Particle sphere
+    const particleCount = 420;
+    const positions = new Float32Array(particleCount * 3);
+    for(let i=0;i<particleCount;i++){
+      const r = 1.9 + Math.random()*0.5;
+      const theta = Math.random()*Math.PI*2;
+      const phi = Math.acos((Math.random()*2)-1);
+      positions[i*3]   = r * Math.sin(phi) * Math.cos(theta);
+      positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i*3+2] = r * Math.cos(phi);
+    }
+    const particleGeo = new THREE.BufferGeometry();
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const particleMat = new THREE.PointsMaterial({ color: 0xF0C98A, size: 0.028, transparent: true, opacity: 0.75 });
+    const particles = new THREE.Points(particleGeo, particleMat);
+    group.add(particles);
+
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth) - 0.5;
+      mouseY = (e.clientY / window.innerHeight) - 0.5;
+    });
+
+    const clock = new THREE.Clock();
+    function animate(){
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      const pulse = 1 + Math.sin(t * 1.6) * 0.045;
+      core.scale.setScalar(pulse);
+      core2.scale.setScalar(1 + Math.sin(t * 1.6 + 0.6) * 0.06);
+      particles.scale.setScalar(1 + Math.sin(t * 1.6 + 1.2) * 0.03);
+
+      group.rotation.y = t * 0.18 + mouseX * 0.6;
+      group.rotation.x = mouseY * 0.4 + Math.sin(t*0.3)*0.05;
+      core2.rotation.y -= 0.01;
+      particles.rotation.y += 0.0009;
+
+      renderer.render(scene, camera);
+    }
+    if(!prefersReduced){ animate(); } else { renderer.render(scene, camera); }
+
+    window.addEventListener('resize', () => {
+      w = holder.clientWidth; h = holder.clientHeight;
+      if(w === 0 || h === 0) return;
+      camera.aspect = w/h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+  })();
+</script>
+
+<!--
+  ElevenLabs widget:
+  Paste your ElevenLabs Conversational AI embed script here, right before </body>.
+  Example:
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+  <elevenlabs-convai agent-id="YOUR_AGENT_ID"></elevenlabs-convai>
+-->
+<elevenlabs-convai agent-id="agent_7601ky1bgnhjej6rttt6wwjfsjbb"></elevenlabs-convai>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+
+
+</body>
+</html>
