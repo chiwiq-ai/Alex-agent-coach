@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="is-loading">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alex — Your Business Coach</title>
+<title>Alex, Your Business Coach</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -33,6 +33,68 @@
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
+
+  html.is-loading, html.is-loading body{
+    overflow: hidden;
+    height: 100%;
+  }
+
+  #preloader{
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    transition: opacity .8s ease, visibility .8s ease;
+  }
+  #preloader.hide{
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .pl-word{
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.9rem;
+    letter-spacing: 0.01em;
+    color: var(--text);
+    opacity: 0;
+    animation: pl-fade .8s ease forwards .25s;
+  }
+  .pl-tagline{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    opacity: 0;
+    animation: pl-fade .8s ease forwards .45s;
+  }
+  @keyframes pl-fade{
+    from{ opacity: 0; transform: translateY(8px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+  .pl-bar{
+    width: 160px;
+    height: 2px;
+    background: rgba(244,241,234,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .pl-bar span{
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--violet), var(--brass));
+    animation: pl-load 2s cubic-bezier(.3,0,.2,1) forwards .15s;
+  }
+  @keyframes pl-load{ to{ width: 100%; } }
 
   ::selection{ background: var(--violet); color: var(--bg); }
 
@@ -212,22 +274,53 @@
   .hero-stats{
     margin-top: 54px;
     display: flex;
-    gap: 42px;
+    gap: 36px;
     flex-wrap: wrap;
+    position: relative;
+    padding-top: 22px;
+    perspective: 600px;
   }
-  .stat b{
-    display:block;
-    font-family: 'Fraunces', serif;
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--text);
+  .hero-stats::before{
+    content:'';
+    position: absolute;
+    top: 0; left: 0;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, var(--violet-soft), transparent 40%, var(--brass-soft), transparent 80%);
+    background-size: 200% 100%;
+    opacity: 0.35;
+    animation: hud-scan 5s linear infinite;
+  }
+  @keyframes hud-scan{
+    0%{ background-position: 0% 0; }
+    100%{ background-position: -200% 0; }
+  }
+  .stat{
+    position: relative;
+    padding-left: 16px;
+    transform-style: preserve-3d;
+    animation: stat-float 6s ease-in-out infinite;
+  }
+  @keyframes stat-float{
+    0%, 100%{ transform: translateY(0) rotateX(0deg); }
+    50%{ transform: translateY(-5px) rotateX(6deg); }
+  }
+  .stat::before{
+    content:'';
+    position: absolute;
+    left: 0; top: 3px;
+    width: 6px; height: 6px;
+    background: var(--violet-soft);
+    box-shadow: 0 0 8px 1px rgba(133,119,245,0.7);
   }
   .stat span{
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-faint);
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.86rem;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text);
+    max-width: 18ch;
   }
 
   /* ORB STAGE */
@@ -470,12 +563,17 @@
 </head>
 <body>
 
+<div id="preloader">
+  <div class="pl-word">ChiwiQ</div>
+  <div class="pl-tagline">Your operations. Running on intelligence.</div>
+  <div class="pl-bar"><span></span></div>
+</div>
+
 <div id="bg-canvas" aria-hidden="true"></div>
 
 <header>
   <nav>
     <div class="logo">Alex <span>Business Coach</span></div>
-    <a href="#talk" class="nav-cta">Talk to Alex</a>
   </nav>
 </header>
 
@@ -484,17 +582,16 @@
     <div class="hero-copy">
       <span class="eyebrow">On call, day or night</span>
       <h1>Alex, your <em>business</em> coach.</h1>
-      <p class="lede story">Tell him what's stuck — pricing, hiring, a slow quarter, a launch you're not sure about. Alex listens, asks the right follow-up, and hands you a plan you can act on before you hang up.</p>
+      <p class="lede story">Tell him what's stuck: pricing, hiring, a slow quarter, a launch you're not sure about. Alex listens, asks the right follow-up, and hands you a plan you can act on before you hang up.</p>
 
       <div class="hero-actions">
-        <a href="#talk" class="btn-primary">Start talking →</a>
         <a href="#topics" class="btn-ghost">What he helps with</a>
       </div>
 
       <div class="hero-stats">
-        <div class="stat"><b>24/7</b><span>Always answers</span></div>
-        <div class="stat"><b>&lt; 10 sec</b><span>To first response</span></div>
-        <div class="stat"><b>1:1</b><span>No queue, no waitlist</span></div>
+        <div class="stat" style="animation-delay: 0s"><span>Pattern Recognition</span></div>
+        <div class="stat" style="animation-delay: .6s"><span>Instant Clarity</span></div>
+        <div class="stat" style="animation-delay: 1.2s"><span>Strategic Reach</span></div>
       </div>
     </div>
 
@@ -508,13 +605,6 @@
       <div class="orb-caption">Alex is listening</div>
     </div>
   </div>
-
-  <div class="wrap">
-    <div class="widget-slot">
-      <span class="label">Voice widget</span>
-      <p>Alex is live — the ElevenLabs widget is connected. By default it floats as a button in the corner of the screen (that's how ElevenLabs ships it); let me know if you'd rather it sit inline right here under the orb instead.</p>
-    </div>
-  </div>
 </section>
 
 <section class="section-pad" id="topics">
@@ -522,7 +612,7 @@
     <div class="section-head reveal">
       <span class="eyebrow">Bring him the real problem</span>
       <h2>Four things founders call about most</h2>
-      <p class="story">Alex isn't a script. He works from what you tell him — these are just the conversations that come up again and again.</p>
+      <p class="story">Alex isn't a script. He works from what you tell him. These are just the conversations that come up again and again.</p>
     </div>
 
     <div class="topics">
@@ -534,7 +624,7 @@
       <div class="topic-card reveal">
         <span class="tag">Growth</span>
         <h3>Getting unstuck</h3>
-        <p class="story">Revenue's flat and you can't tell if it's the offer, the price, or the pitch. Talk it through out loud — Alex is good at spotting which one it actually is.</p>
+        <p class="story">Revenue's flat and you can't tell if it's the offer, the price, or the pitch. Talk it through out loud. Alex is good at spotting which one it actually is.</p>
       </div>
       <div class="topic-card reveal">
         <span class="tag">Leadership</span>
@@ -544,7 +634,7 @@
       <div class="topic-card reveal">
         <span class="tag">Cash flow</span>
         <h3>Making the runway make sense</h3>
-        <p class="story">Walk Alex through what's coming in and going out. He'll help you see where the pressure actually is, three months out — not just this week.</p>
+        <p class="story">Walk Alex through what's coming in and going out. He'll help you see where the pressure actually is, three months out, not just this week.</p>
       </div>
     </div>
   </div>
@@ -562,12 +652,12 @@
       <div class="step reveal">
         <span class="num">First</span>
         <h3>Open the call</h3>
-        <p class="story">Tap "Start talking." No sign-up, no intake form — Alex is already on the line.</p>
+        <p class="story">Tap "Start talking." No sign-up, no intake form. Alex is already on the line.</p>
       </div>
       <div class="step reveal" style="transition-delay: .12s">
         <span class="num">Then</span>
         <h3>Say what's going on</h3>
-        <p class="story">Talk the way you would to a mentor — messy, half-formed, mid-thought. He'll ask what he needs to.</p>
+        <p class="story">Talk the way you would to a mentor: messy, half-formed, mid-thought. He'll ask what he needs to.</p>
       </div>
       <div class="step reveal" style="transition-delay: .24s">
         <span class="num">After</span>
@@ -582,19 +672,30 @@
   <div class="wrap">
     <h2 class="reveal">Whatever it is, say it out loud.</h2>
     <p class="reveal story">Alex is already listening.</p>
-    <a href="#talk" class="btn-primary reveal">Talk to Alex →</a>
   </div>
 </section>
 
 <footer>
   <div class="wrap footer-row">
-    <span>Alex — Business Coach</span>
-    <span>Voice-first. Always on.</span>
+    <span>Alex, Business Coach</span>
+    <span>Powered by ChiwiQ</span>
   </div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+  // ---- Preloader: brief ChiwiQ brand moment before the site unlocks ----
+  (function(){
+    const pre = document.getElementById('preloader');
+    if(!pre) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hold = reduced ? 500 : 2100;
+    window.setTimeout(() => {
+      pre.classList.add('hide');
+      document.documentElement.classList.remove('is-loading');
+    }, hold);
+  })();
+
   // ---- Scroll reveal ----
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
@@ -879,16 +980,8 @@
   })();
 </script>
 
-<!--
-  ElevenLabs widget:
-  Paste your ElevenLabs Conversational AI embed script here, right before </body>.
-  Example:
-  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-  <elevenlabs-convai agent-id="YOUR_AGENT_ID"></elevenlabs-convai>
--->
-<elevenlabs-convai agent-id="agent_7601ky1bgnhjej6rttt6wwjfsjbb"></elevenlabs-convai>
+<elevenlabs-convai id="alex-widget" agent-id="agent_7601ky1bgnhjej6rttt6wwjfsjbb"></elevenlabs-convai>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-
 
 </body>
 </html>
